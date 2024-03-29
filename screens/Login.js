@@ -1,13 +1,20 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
 import FormInput from "../components/FormInput";
 import UserContext from "../context/UserContext";
-
+import { useNavigation } from "@react-navigation/native";
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const { error, loginUser } = useContext(UserContext);
+  const { user, error, loginUser } = useContext(UserContext);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (user.token) {
+      navigation.navigate("Home");
+    }
+  }, [user.token]);
 
   return (
     <View style={styles.container}>

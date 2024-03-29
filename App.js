@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FontAwesome } from "@expo/vector-icons";
-import React, { useContext } from "react";
+import React, { useContext ,useEffect} from "react";
 import UserContext from "./context/UserContext";
 import {
   NavigationContainer,
@@ -52,7 +52,10 @@ function Home() {
 }
 
 function Navigator() {
-  const { user } = useContext(UserContext);
+  const { user, getToken } = useContext(UserContext);
+  useEffect(() => {
+    getToken();
+  }, []);
   return (
     <NavigationContainer>
       <StatusBar style="auto" />
