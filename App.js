@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { FontAwesome } from "@expo/vector-icons";
-import React from "react";
+import React, { useContext } from "react";
+import UserContext from "./context/UserContext";
 import {
   NavigationContainer,
   getFocusedRouteNameFromRoute,
@@ -50,23 +51,30 @@ function Home() {
   );
 }
 
+function Navigator() {
+  const { user } = useContext(UserContext);
+  return (
+    <NavigationContainer>
+      <StatusBar style="auto" />
+      <Stack.Navigator initialRouteName={user.token.length ? "Home" : "Login"}>
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={({ route }) => ({
+            headerTitle: getFocusedRouteNameFromRoute(route),
+          })}
+        />
+        <Stack.Screen name="PostDetail" component={PostDetail} />
+        <Stack.Screen name="Login" component={Login} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
 export default function App() {
   return (
     <AppContext>
-      <NavigationContainer>
-        <StatusBar style="auto" />
-        <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen
-            name="Home"
-            component={Home}
-            options={({ route }) => ({
-              headerTitle: getFocusedRouteNameFromRoute(route),
-            })}
-          />
-          <Stack.Screen name="PostDetail" component={PostDetail} />
-          <Stack.Screen name="Login" component={Login} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <Navigator />
     </AppContext>
   );
 }
