@@ -10,17 +10,68 @@ import {
   Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-
+import * as ImagePicker from "expo-image-picker";
 import Button from "../components/Button";
 import FormInput from "../components/FormInput";
 import PostsContext from "../context/PostsContext";
-
+import { useActionSheet } from "@expo/react-native-action-sheet";
 export default function PostForm() {
   const [imageUrl, setImageUrl] = useState("");
   const [description, setDescription] = useState("");
-
+  const { showActionSheetWithOptions } = useActionSheet();
   const { addPost } = useContext(PostsContext);
   const navigation = useNavigation();
+  async function uploadImage() {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert(
+        "Sorry",
+        "We need camera roll permissions to make this work!"
+      );
+    } else {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+      if (!result.cancelled) {
+        setImageUrl(result.uri);
+      }
+    }
+  }
+
+  async function takePicture() {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Sorry", "We need camera permissions to make this work!");
+    } else {
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        aspect: [4, 3],
+        quality: 1,
+      });
+      if (!result.cancelled) {
+        setImageUrl(result.uri);
+      }
+    }
+  }
+
+  function openActionSheet() {
+    const options = ["Camera roll", "Camera", "Cancel"];
+    const cancelButtonIndex = 2;
+    showActionSheetWithOptions(
+      { options, cancelButtonIndex },
+      (buttonIndex) => {
+        if (buttonIndex === 0) {
+          uploadImage();
+        }else if(buttonIndex===1)
+        {
+          takePicture();
+        }
+      }
+    );
+  }
 
   return (
     <KeyboardAvoidingView
@@ -28,8 +79,18 @@ export default function PostForm() {
       style={styles.container}
     >
       <View style={styles.form}>
-        <TouchableOpacity style={styles.imageButton}>
-          <Text style={styles.imageButtonText}>+</Text>
+        <TouchableOpacity
+          style={styles.imageButton}
+          onPress={() => openActionSheet()}
+        >
+          {imageUrl.length ? (
+            <Image
+              source={{ uri: imageUrl }}
+              style={{ width: "100%", height: "100%" }}
+            />
+          ) : (
+            <Text style={styles.imageButtonText}>+</Text>
+          )}
         </TouchableOpacity>
         <FormInput
           onChangeText={setDescription}

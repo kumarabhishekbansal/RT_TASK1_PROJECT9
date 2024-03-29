@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FontAwesome } from "@expo/vector-icons";
-import React, { useContext ,useEffect} from "react";
+import React, { useContext, useEffect } from "react";
 import UserContext from "./context/UserContext";
 import {
   NavigationContainer,
@@ -14,8 +14,8 @@ import Login from "./screens/Login";
 import PostForm from "./screens/PostForm";
 import AppContext from "./context/AppContext";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { navigationRef } from './routing';
-
+import { navigationRef } from "./routing";
+import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -79,8 +79,10 @@ function Navigator() {
 
 export default function App() {
   return (
-    <AppContext>
-      <Navigator />
-    </AppContext>
+    <ActionSheetProvider>
+      <AppContext>
+        <Navigator />
+      </AppContext>
+    </ActionSheetProvider>
   );
 }
