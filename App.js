@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import React, { useContext, useEffect } from "react";
 import UserContext from "./context/UserContext";
 import {
@@ -17,6 +17,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { navigationRef } from "./routing";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
+import { Platform } from "react-native";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -28,10 +29,17 @@ function Home() {
         tabBarInactiveTintColor: "gray",
         tabBarIcon: ({ color, size }) => {
           const iconName =
-            (route.name === "Posts" && "feed") ||
-            (route.name === "PostForm" && "plus-square") ||
-            (route.name === "Profile" && "user");
-          return <FontAwesome name={iconName} size={size} color={color} />;
+            (route.name === "Posts" &&
+              (Platform.OS === "ios" ? "feed" : "rss-feed")) ||
+            (route.name === "PostForm" &&
+              (Platform.OS === "ios" ? "plus-square" : "add-box")) ||
+            (route.name === "Profile" &&
+              (Platform.OS === "ios" ? "user" : "person"));
+          return Platform.OS === "ios" ? (
+            <FontAwesome name={iconName} size={size} color={color} />
+          ) : (
+            <MaterialIcons name={iconName} size={size} color={color} />
+          );
         },
       })}
     >

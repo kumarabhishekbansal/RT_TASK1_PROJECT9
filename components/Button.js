@@ -1,5 +1,11 @@
-import React from 'react';
-import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import React from "react";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Text,
+  Platform,
+} from "react-native";
 
 export default function Button({ onPress, label }) {
   return (
@@ -13,14 +19,21 @@ export default function Button({ onPress, label }) {
 
 const styles = StyleSheet.create({
   button: {
-    width: '100%',
+    width: "100%",
     padding: 20,
     borderRadius: 5,
-    backgroundColor: 'blue',
+    ...Platform.select({
+      ios: {
+        backgroundColor: "blue",
+      },
+      android: {
+        backgroundColor: "purple",
+      },
+    }),
   },
   buttonText: {
     fontSize: 20,
-    textAlign: 'center',
-    color: 'white',
+    textAlign: "center",
+    color: "white",
   },
 });
