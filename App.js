@@ -14,6 +14,9 @@ import Login from "./screens/Login";
 import PostForm from "./screens/PostForm";
 import AppContext from "./context/AppContext";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { navigationRef } from './routing';
+
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -57,7 +60,7 @@ function Navigator() {
     getToken();
   }, []);
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <StatusBar style="auto" />
       <Stack.Navigator initialRouteName={user.token.length ? "Home" : "Login"}>
         <Stack.Screen
